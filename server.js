@@ -30,7 +30,7 @@ app.get("/", function (request, response) {
 
 // TODO add your routes and helper functions here
 // 1. Create a new booking
-app.post("/bookings", (req, res) => {
+app.put("/bookings", (req, res) => {
   let lastId = bookings.length + 1;
   if(!req.body.title || !req.body.firstName || !req.body.surname || !req.body.email || !req.body.roomId || !req.body.checkInDate || !req.body.checkOutDate) {
     res.status(404).send("missing information, not allowed to proceed")
@@ -41,8 +41,9 @@ app.post("/bookings", (req, res) => {
     bookings.push(newBooking);
     res.json(bookings);
   }
-  
 })
+
+
 // 1. Read all bookings
 app.get("/bookings", (req, res) => {
   res.json(bookings)
