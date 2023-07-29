@@ -32,20 +32,20 @@ app.get("/", function (request, response) {
 // 1. Create a new booking
 app.post("/bookings", (req, res) => {
   let lastId = bookings.length + 1;
-  if(!req.body.id || !req.body.title || !req.body.firstName || !req.body.surname || !req.body.email || !req.body.roomId || !req.body.checkInDate || !req.body.checkOutDate) {
+  if(!req.body.title || !req.body.firstName || !req.body.surname || !req.body.email || !req.body.roomId || !req.body.checkInDate || !req.body.checkOutDate) {
     res.status(404).send("missing information, not allowed to proceed")
   } else if(moment(req.body.checkOutDate) < moment(req.body.checkInDate)) {
     res.send("You can't check out before checking in!")
   } else {
     let newBooking = { ...{ id: lastId }, ...req.body };
     bookings.push(newBooking);
-    res.send(bookings);
+    res.json(bookings);
   }
   
 })
 // 1. Read all bookings
 app.get("/bookings", (req, res) => {
-  res.send(bookings)
+  res.json(bookings)
 })
 
 app.get("/bookings/search", (req, res) => {
@@ -63,7 +63,7 @@ app.get("/bookings/search", (req, res) => {
     let result = bookings.filter(booking => booking.firstName.toLowerCase().includes(searchValue) || booking.surname.toLowerCase().includes(searchValue) || booking.email.includes(searchValue))
     result.length !== 0 ? res.send(result) : res.send("not found");
   } else {
-    res.send("I don't know what you are looking for")
+    res.json("I don't know what you are looking for")
   }
   
 })
@@ -73,14 +73,14 @@ app.get("/bookings/:id", (req, res)=>{
   let id = Number(req.params.id);
   let booking = bookings.find((booking) => booking.id === id);
   // If the booking to be read cannot be found by id, return a 404.
-  booking ? res.send(booking) : res.status(404).send("such booking not found");
+  booking ? res.json(booking) : res.status(404).json("such booking not found");
 })
 // 1. Delete a booking, specified by an ID
 
 app.delete("/bookings/:id", (req, res) => {
   let id = Number(req.params.id);
   let indexToDelete = bookings.findIndex((booking) => booking.id === id);
-  indexToDelete !== -1 ? (bookings.splice(indexToDelete, 1), res.sendStatus(200)) : res.status(404).send("Could not find to delete")
+  indexToDelete !== -1 ? (bookings.splice(indexToDelete, 1), res.sendStatus(200)) : res.status(404).json("Could not find to delete")
 })
 
 // If the booking for deletion cannot be found by id, return a 404.
