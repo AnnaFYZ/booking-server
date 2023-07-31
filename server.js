@@ -16,21 +16,9 @@ app.get("/", function (request, response) {
   response.send("Hotel booking server.  Ask for /bookings, etc.");
 });
 
-
-  // {
-  //   "id": 1,
-  //   "title": "Mr",
-  //   "firstName": "Jimi",
-  //   "surname": "Hendrix",
-  //   "email": "jimi@example.com",
-  //   "roomId": 2,
-  //   "checkInDate": "2017-11-21",
-  //   "checkOutDate": "2017-11-23"
-  // }
-
 // TODO add your routes and helper functions here
 // 1. Create a new booking
-app.put("/bookings", (req, res) => {
+app.post("/bookings", (req, res) => {
   let lastId = bookings.length + 1;
   if(!req.body.title || !req.body.firstName || !req.body.surname || !req.body.email || !req.body.roomId || !req.body.checkInDate || !req.body.checkOutDate) {
     res.status(404).send("missing information, not allowed to proceed")
