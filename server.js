@@ -18,19 +18,39 @@ app.get("/", function (request, response) {
 
 // TODO add your routes and helper functions here
 // 1. Create a new booking
-app.post("/bookings", (req, res) => {
+app.put("/bookings", (req, res) => {
   let lastId = bookings.length + 1;
   if(!req.body.title || !req.body.firstName || !req.body.surname || !req.body.email || !req.body.roomId || !req.body.checkInDate || !req.body.checkOutDate) {
     res.status(404).send("missing information, not allowed to proceed")
   } else if(moment(req.body.checkOutDate) < moment(req.body.checkInDate)) {
     res.send("You can't check out before checking in!")
-  } else {
+  } else if (req.body.id === "") {
     let newBooking = { ...{ id: lastId }, ...req.body };
     bookings.push(newBooking);
     res.json(bookings);
+  } else {
+      const updatedBooking = req.body;
+      const bookingIndex = bookings.findIndex(booking => booking.id === Number(req.body.id));
+      if (bookingIndex !== -1) {
+        bookings[bookingIndex] = { ...bookings[bookingIndex], ...updatedBooking };
+        res.status(200).json("Booking updated successfully");
+      } else {
+        res.status(404).json(`Booking with ID ${bookingId} not found`);
+      }
   }
 })
 
+// app.put("/bookings/:id", (req, res) => {
+//   const bookingId = Number(req.params.id);
+//   const updatedBooking = req.body;
+//   const bookingIndex = bookings.findIndex(booking => booking.id === bookingId);
+//   if (bookingIndex !== -1) {
+//     bookings[bookingIndex] = { ...bookings[bookingIndex], ...updatedBooking };
+//     res.status(200).json("Booking updated successfully");
+//   } else {
+//     res.status(404).json(`Booking with ID ${bookingId} not found`);
+//   }
+// })
 
 // 1. Read all bookings
 app.get("/bookings", (req, res) => {
